@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#171412">
+<title>CondoOwl — o app do seu condomínio</title>
+<meta name="description" content="Avisos e reservas do condomínio num lugar só, no celular de cada morador. Pagamento pelo app e prestadores de confiança chegam em breve.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 8l9 6q7-3 14 0l9-6v20q0 14-16 16Q8 42 8 28z' fill='%237c76ee'/%3E%3Ccircle cx='17' cy='24' r='6' fill='%23fff'/%3E%3Ccircle cx='31' cy='24' r='6' fill='%23fff'/%3E%3Ccircle cx='17' cy='24' r='2.6' fill='%231f2433'/%3E%3Ccircle cx='31' cy='24' r='2.6' fill='%231f2433'/%3E%3Cpath d='M24 28l-3 6h6z' fill='%23f2b04a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: dark;
+  --fundo: #171412;
+  --fundo-2: #1d1916;
+  --cartao: #262120;
+  --linha: #3a332e;
+  --texto: #f4ede3;
+  --texto-2: #b8ad9f;
+  --marca: #9a95f5;
+  --marca-forte: #6d66e8;
+  --sol: #f2b04a;
+  --ok: #7fd9ab;
+  --ok-fundo: #1c3a2c;
+  --ruim: #f2a07a;
+  --ruim-fundo: #41261b;
+  --titulo: 'Nunito', 'Trebuchet MS', system-ui, sans-serif;
+  --corpo: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 400 1.0625rem/1.7 var(--corpo);
+  -webkit-font-smoothing: antialiased;
+}
+p { margin: 0; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--titulo); font-weight: 800; line-height: 1.15; margin: 0; }
+:focus-visible { outline: 3px solid var(--sol); outline-offset: 3px; border-radius: 6px; }
+
+.miolo { width: min(1060px, 100% - 40px); margin-inline: auto; }
+.pular { position: absolute; left: -999px; top: 8px; background: var(--sol); color: #2a1d00; padding: 10px 14px; border-radius: 8px; z-index: 50; }
+.pular:focus { left: 12px; }
+
+/* topo */
+.topo { border-bottom: 1px solid var(--linha); }
+.barra { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 1.45rem/1 var(--titulo); }
+.logo b { color: var(--marca); }
+.links { display: flex; align-items: center; gap: 24px; }
+.links a:not(.botao) { text-decoration: none; color: var(--texto-2); font-weight: 600; font-size: .97rem; padding: 10px 0; }
+.links a:not(.botao):hover { color: var(--texto); }
+
+.botao {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 50px; padding: 0 26px; border-radius: 12px;
+  background: var(--marca-forte); border: 2px solid var(--marca-forte); color: #fff;
+  font: 700 1rem/1 var(--corpo); text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: transform .15s, background .15s, border-color .15s;
+}
+.botao:hover { background: #5a53d8; border-color: #5a53d8; transform: translateY(-1px); }
+.botao.contorno { background: transparent; border-color: var(--linha); color: var(--texto); }
+.botao.contorno:hover { border-color: var(--marca); background: rgba(154, 149, 245, .1); }
+.botao.sol { background: var(--sol); border-color: var(--sol); color: #2a1d00; }
+.botao.sol:hover { background: #ffc468; border-color: #ffc468; }
+.botao.pequeno { min-height: 44px; padding: 0 20px; font-size: .95rem; }
+
+@media (max-width: 720px) { .links a:not(.botao) { display: none; } }
+@media (max-width: 400px) { .logo { font-size: 1.25rem; } .botao.pequeno { padding: 0 14px; font-size: .88rem; } }
+
+/* início */
+.inicio { padding: clamp(44px, 8vw, 96px) 0 clamp(56px, 8vw, 104px); }
+.inicio-grade { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+h1 { font-size: clamp(2.4rem, 6vw, 4.1rem); }
+.sublinhado {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6c10-6 18 4 28 0s18 4 28 0 18 4 28 0 18 4 30 0' fill='none' stroke='%23f2b04a' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") 0 100% / 100% .3em no-repeat;
+  padding-bottom: .22em;
+}
+.abertura { font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--texto-2); margin: 24px 0 32px; max-width: 36ch; }
+.acoes { display: flex; flex-wrap: wrap; gap: 12px; }
+.situacao { margin-top: 30px; font-size: .96rem; color: var(--texto-2); max-width: 46ch; padding-left: 14px; border-left: 3px solid var(--sol); }
+.situacao strong { color: var(--texto); }
+@media (max-width: 900px) { .inicio-grade { grid-template-columns: 1fr; } }
+
+.cena { padding: 6px 0 20px; }
+.bilhete {
+  position: relative; width: min(300px, 88%); transform: rotate(-3.5deg);
+  background: #fff1b8; color: #4a4528; padding: 22px 20px 24px;
+  font: italic 1.05rem/1.45 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive;
+  box-shadow: 0 14px 26px -12px rgba(0, 0, 0, .7);
+}
+.bilhete::before { content: ''; position: absolute; top: -12px; left: 50%; width: 84px; height: 26px; margin-left: -42px; background: rgba(242, 176, 74, .6); transform: rotate(2deg); }
+.bilhete s { opacity: .55; }
+.celular-card { position: relative; margin: -6px 0 0 auto; width: min(340px, 100%); background: var(--cartao); border: 1px solid var(--linha); border-radius: 18px; padding: 18px; box-shadow: 0 22px 40px -20px rgba(0, 0, 0, .8); }
+.celular-card h3 { font-size: .98rem; color: var(--texto-2); font-weight: 700; margin-bottom: 12px; }
+
+/* blocos */
+.bloco { padding: clamp(52px, 8vw, 92px) 0; border-top: 1px solid var(--linha); }
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; }
+.duas > * { min-width: 0; }
+.inverte .texto { order: 2; }
+@media (max-width: 860px) { .duas { grid-template-columns: 1fr; } .inverte .texto { order: 0; } }
+.quando { font: 700 .98rem/1.4 var(--corpo); color: var(--sol); margin-bottom: 12px; }
+h2 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
+.texto > p:not(.quando) { margin-top: 18px; color: var(--texto-2); max-width: 46ch; }
+.texto strong { color: var(--texto); }
+
+.comparacao { margin-top: 24px; display: grid; gap: 10px; max-width: 46ch; }
+.comparacao div { padding: 12px 16px; border-radius: 10px; font-size: .98rem; }
+.comparacao b { display: block; font-size: .8rem; margin-bottom: 2px; }
+.antes { background: var(--ruim-fundo); color: var(--ruim); }
+.depois { background: var(--ok-fundo); color: var(--ok); }
+
+/* demos */
+.cartao { background: var(--cartao); border: 1px solid var(--linha); border-radius: 18px; padding: 24px; box-shadow: 0 22px 40px -24px rgba(0, 0, 0, .8); }
+.cartao h3 { font-size: 1.05rem; margin-bottom: 14px; }
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.filtro { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 2px solid var(--linha); background: transparent; color: var(--texto); font: 700 .92rem/1 var(--corpo); cursor: pointer; }
+.filtro:hover { border-color: var(--marca); }
+.filtro[aria-pressed='true'] { background: var(--marca-forte); border-color: var(--marca-forte); color: #fff; }
+.feed { list-style: none; margin: 0; padding: 0; }
+.aviso { display: grid; justify-items: start; gap: 6px; padding: 12px 0; border-top: 1px solid var(--linha); }
+.feed .aviso:first-child, .celular-card .aviso:first-of-type { border-top: 0; padding-top: 0; }
+.aviso strong { font-size: 1rem; }
+.exemplo { font-size: .8rem; color: var(--texto-2); }
+.etiqueta { font: 700 .72rem/1 var(--corpo); padding: 4px 8px; border-radius: 6px; }
+.e-aviso { background: rgba(242, 176, 74, .18); color: var(--sol); }
+.e-manut { background: rgba(110, 168, 240, .2); color: #9cc4fa; }
+.e-reuniao { background: rgba(154, 149, 245, .2); color: var(--marca); }
+.e-evento { background: rgba(224, 142, 230, .2); color: #eba7f0; }
+.legenda { margin-top: 14px; font-size: .84rem; color: var(--texto-2); }
+
+.horarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 10px; }
+.horario { min-height: 62px; padding: 8px; border-radius: 12px; border: 2px solid var(--linha); background: transparent; color: var(--texto); font: 700 1rem/1.25 var(--corpo); cursor: pointer; }
+.horario small { display: block; font: 600 .76rem/1.3 var(--corpo); color: var(--texto-2); }
+.horario:hover:not([aria-disabled='true']) { border-color: var(--marca); }
+.horario[aria-disabled='true'] { background: repeating-linear-gradient(135deg, #2c2623 0 8px, #231e1c 8px 16px); color: var(--texto-2); cursor: not-allowed; }
+.horario[aria-pressed='true'] { background: var(--ok-fundo); border-color: var(--ok); color: var(--ok); }
+.horario[aria-pressed='true'] small { color: var(--ok); }
+.tremer { animation: tremer .35s; }
+@keyframes tremer { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.recado { margin-top: 16px; min-height: 3.6em; padding: 12px 14px; border-radius: 10px; background: var(--fundo-2); font-size: .95rem; }
+.recado.erro { background: var(--ruim-fundo); color: var(--ruim); }
+.recado.ok { background: var(--ok-fundo); color: var(--ok); }
+
+/* celular */
+.pontos { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.pontos li { padding-left: 18px; border-left: 3px solid var(--sol); color: var(--texto-2); max-width: 50ch; }
+.pontos strong { display: block; color: var(--texto); }
+
+/* em breve */
+.lista-breve { margin-top: 34px; border-top: 2px solid var(--texto); }
+.lista-breve article { display: grid; grid-template-columns: minmax(200px, .5fr) 1fr; gap: 28px; padding: 26px 0; border-bottom: 1px solid var(--linha); }
+.lista-breve h3 { font-size: 1.3rem; }
+.lista-breve h3 small { display: block; margin-top: 6px; font: 700 .82rem/1.3 var(--corpo); color: var(--sol); }
+.lista-breve p { color: var(--texto-2); max-width: 56ch; }
+.lista-breve strong { color: var(--texto); }
+@media (max-width: 700px) { .lista-breve article { grid-template-columns: 1fr; gap: 10px; } }
+
+/* fim */
+.fim { padding: clamp(52px, 8vw, 92px) 0; }
+.fim-caixa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px; background: var(--cartao); border: 1px solid var(--linha); border-radius: 22px; padding: clamp(28px, 5vw, 56px); }
+.fim h2 { font-size: clamp(1.7rem, 3.6vw, 2.4rem); }
+.fim p { margin-top: 10px; color: var(--texto-2); }
+.rodape { padding: 0 0 48px; color: var(--texto-2); font-size: .9rem; }
+.rodape .miolo { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .tremer { animation: none; }
+  .botao { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="topo">
+  <div class="miolo barra">
+    <a class="logo" href="#inicio" aria-label="CondoOwl, início">
+      <svg id="coruja" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M8 8l9 6q7-3 14 0l9-6v20q0 14-16 16Q8 42 8 28z" fill="#7c76ee"/>
+        <circle cx="17" cy="24" r="6" fill="#fff"/>
+        <circle cx="31" cy="24" r="6" fill="#fff"/>
+        <circle class="pupila" cx="17" cy="24" r="2.6" fill="#1f2433"/>
+        <circle class="pupila" cx="31" cy="24" r="2.6" fill="#1f2433"/>
+        <path d="M24 28l-3 6h6z" fill="#f2b04a"/>
+      </svg>
+      <span>Condo<b>Owl</b></span>
+    </a>
+    <nav class="links" aria-label="Principal">
+      <a href="#avisos">Avisos</a>
+      <a href="#reservas">Reservas</a>
+      <a href="#em-breve">Em breve</a>
+      <a class="botao pequeno" href="#contato">Marcar conversa</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="inicio" id="inicio">
+    <div class="miolo inicio-grade">
+      <div>
+        <h1>Chega de recado colado <span class="sublinhado">no elevador</span>.</h1>
+        <p class="abertura">Os avisos e as reservas do condomínio num lugar só, no celular de cada morador. O síndico para de correr atrás de todo mundo.</p>
+        <div class="acoes">
+          <a class="botao" href="#contato">Quero ver no meu condomínio</a>
+          <a class="botao contorno" href="#avisos">Como funciona</a>
+        </div>
+        <p class="situacao"><strong>Já tem:</strong> mural de avisos e reserva de espaços. <strong>Vem aí:</strong> pagar o condomínio pelo app e uma lista de prestadores de confiança.</p>
+      </div>
+      <div class="cena" role="img" aria-label="Um bilhete de papel colado ao lado do mural do aplicativo">
+        <div class="bilhete">Elevador em manutenção terça. <s>Avisem os vizinhos!</s><br>— Síndico</div>
+        <div class="celular-card">
+          <h3>Mural do condomínio</h3>
+          <div class="aviso"><span class="etiqueta e-manut">Manutenção</span><strong>Elevador social parado na terça</strong><span class="exemplo">Exemplo</span></div>
+          <div class="aviso"><span class="etiqueta e-reuniao">Reunião</span><strong>Assembleia: pauta e horário</strong><span class="exemplo">Exemplo</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" id="avisos">
+    <div class="miolo duas">
+      <div class="texto">
+        <p class="quando">Quinta-feira, 7h. Vão cortar a água.</p>
+        <h2>Todo mundo fica sabendo, sem depender de quem passou na portaria.</h2>
+        <p>Hoje o aviso vira bilhete na portaria, mensagem perdida no grupo, e metade dos vizinhos só descobre quando abre a torneira.</p>
+        <p>Aqui o síndico posta uma vez e diz o que é: <strong>aviso, manutenção, reunião ou festa</strong>. Cada morador olha só o que interessa e o recado oficial fica num lugar só.</p>
+      </div>
+      <div class="cartao">
+        <h3>Teste o mural</h3>
+        <div class="filtros" role="group" aria-label="Filtrar por categoria">
+          <button type="button" class="filtro" data-f="todos" aria-pressed="true">Todos</button>
+          <button type="button" class="filtro" data-f="aviso" aria-pressed="false">Avisos</button>
+          <button type="button" class="filtro" data-f="manut" aria-pressed="false">Manutenções</button>
+          <button type="button" class="filtro" data-f="reuniao" aria-pressed="false">Reuniões</button>
+          <button type="button" class="filtro" data-f="evento" aria-pressed="false">Eventos Sociais</button>
+        </div>
+        <ul class="feed" aria-live="polite">
+          <li class="aviso" data-c="aviso"><span class="etiqueta e-aviso">Aviso</span><strong>Água cortada na quinta, das 8h às 12h</strong></li>
+          <li class="aviso" data-c="manut"><span class="etiqueta e-manut">Manutenção</span><strong>Revisão do portão da garagem</strong></li>
+          <li class="aviso" data-c="reuniao"><span class="etiqueta e-reuniao">Reunião</span><strong>Assembleia de moradores</strong></li>
+          <li class="aviso" data-c="evento"><span class="etiqueta e-evento">Evento Social</span><strong>Festa junina do condomínio</strong></li>
+        </ul>
+        <p class="legenda">Avisos de exemplo, só pra você ver como fica.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" id="reservas">
+    <div class="miolo duas inverte">
+      <div class="texto">
+        <p class="quando">Sábado. Duas famílias querem a churrasqueira.</p>
+        <h2>Acabou a briga por horário.</h2>
+        <p>O morador pede o espaço pelo celular em poucos toques. Se o horário já tem dono, o app avisa na hora, e o síndico não precisa decidir quem tem razão.</p>
+        <div class="comparacao">
+          <div class="antes"><b>Antes</b>Caderno na portaria e dois nomes no mesmo horário.</div>
+          <div class="depois"><b>Com o CondoOwl</b>Horário ocupado não dá pra marcar.</div>
+        </div>
+      </div>
+      <div class="cartao">
+        <h3>Churrasqueira, sábado: tente reservar</h3>
+        <div class="horarios" role="group" aria-label="Horários de sábado">
+          <button type="button" class="horario" data-t="08h às 12h" aria-pressed="false">08h–12h<small>Livre</small></button>
+          <button type="button" class="horario" data-t="12h às 16h" aria-pressed="false">12h–16h<small>Livre</small></button>
+          <button type="button" class="horario" data-t="16h às 20h" aria-disabled="true">16h–20h<small>Já reservado</small></button>
+          <button type="button" class="horario" data-t="20h à meia-noite" aria-pressed="false">20h–00h<small>Livre</small></button>
+        </div>
+        <p class="recado" id="recado" role="status">Escolha um horário. Vale tentar o que já está reservado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco">
+    <div class="miolo duas">
+      <div class="texto">
+        <p class="quando">No celular, do jeito que o morador usa.</p>
+        <h2>Pensado pra quem resolve tudo de pé, com uma mão só.</h2>
+      </div>
+      <ul class="pontos">
+        <li><strong>Letra que dá pra ler</strong>Telas limpas, sem bagunça.</li>
+        <li><strong>Sem perder o lugar</strong>Avisos e reservas abrem por cima da tela, com o fundo esmaecido.</li>
+        <li><strong>Cada um com a sua tela</strong>Síndico e morador não veem a mesma coisa. Cada um só vê o que precisa.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bloco" id="em-breve">
+    <div class="miolo">
+      <div class="texto">
+        <p class="quando">Ainda não está no ar</p>
+        <h2>O que vem depois é o que mais dá trabalho pro síndico.</h2>
+      </div>
+      <div class="lista-breve">
+        <article>
+          <h3>Pagar o condomínio pelo app <small>Em breve</small></h3>
+          <p>O morador paga por <strong>Pix ou boleto</strong> e o app já marca a conta como paga. O síndico não precisa mais conferir comprovante um por um.</p>
+        </article>
+        <article>
+          <h3>Prestadores de confiança <small>Em breve</small></h3>
+          <p>Aquele eletricista que alguém indicou no grupo e ninguém sabe se é bom? A ideia é uma lista de eletricista, encanador e outros profissionais <strong>aprovados pelo condomínio</strong>. Um toque e abre a ligação ou o WhatsApp.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="fim" id="contato">
+    <div class="miolo">
+      <div class="fim-caixa">
+        <div>
+          <h2>Bora ver no seu condomínio?</h2>
+          <p>Marque uma conversa e a gente mostra o app funcionando.</p>
+        </div>
+        <!-- TODO: trocar pelo contato real (WhatsApp ou e-mail) -->
+        <a class="botao sol" href="mailto:?subject=Quero%20conhecer%20o%20CondoOwl">Marcar uma conversa</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <div class="miolo"><span>© CondoOwl</span><span>Gestão inteligente. Condomínio em harmonia.</span></div>
+</footer>
+
+<script>
+(function () {
+  // Filtro do mural
+  var filtros = document.querySelectorAll('.filtro');
+  var avisos = document.querySelectorAll('.feed .aviso');
+  filtros.forEach(function (b) {
+    b.addEventListener('click', function () {
+      filtros.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      avisos.forEach(function (a) { a.hidden = !(b.dataset.f === 'todos' || a.dataset.c === b.dataset.f); });
+    });
+  });
+
+  // Reserva da churrasqueira
+  var horarios = document.querySelectorAll('.horario');
+  var recado = document.getElementById('recado');
+  var minha = null;
+  function dizer(texto, tipo) { recado.textContent = texto; recado.className = 'recado ' + (tipo || ''); }
+  horarios.forEach(function (h) {
+    h.addEventListener('click', function () {
+      if (h.getAttribute('aria-disabled') === 'true') {
+        dizer('Esse horário (' + h.dataset.t + ') já tem dono. Não dá pra marcar dois no mesmo horário.', 'erro');
+        h.classList.remove('tremer'); void h.offsetWidth; h.classList.add('tremer');
+        return;
+      }
+      if (minha && minha !== h) {
+        minha.setAttribute('aria-pressed', 'false');
+        minha.querySelector('small').textContent = 'Livre';
+      }
+      var marcar = h.getAttribute('aria-pressed') !== 'true';
+      h.setAttribute('aria-pressed', marcar ? 'true' : 'false');
+      h.querySelector('small').textContent = marcar ? 'Sua reserva' : 'Livre';
+      minha = marcar ? h : null;
+      dizer(marcar ? 'Pronto, churrasqueira reservada das ' + h.dataset.t + '.' : 'Reserva cancelada. O horário ficou livre de novo.', marcar ? 'ok' : '');
+    });
+  });
+
+  // Pupilas da coruja seguem o mouse
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var coruja = document.getElementById('coruja');
+    var pupilas = coruja.querySelectorAll('.pupila');
+    window.addEventListener('pointermove', function (e) {
+      var r = coruja.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width / 2);
+      var dy = e.clientY - (r.top + r.height / 2);
+      var d = Math.hypot(dx, dy) || 1;
+      var k = Math.min(2.2, d / 60);
+      pupilas.forEach(function (p) { p.setAttribute('transform', 'translate(' + (dx / d) * k + ' ' + (dy / d) * k + ')'); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
