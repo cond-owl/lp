@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CondoOwl — o app do seu condomínio</title>
+<meta name="description" content="CondoOwl reúne os avisos e as reservas do condomínio num app só. Cobrança por Pix/boleto e prestadores de confiança chegam na próxima fase.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 8l9 6q7-3 14 0l9-6v20q0 14-16 16Q8 42 8 28z' fill='%234338ca'/%3E%3Ccircle cx='17' cy='24' r='6' fill='%23fff'/%3E%3Ccircle cx='31' cy='24' r='6' fill='%23fff'/%3E%3Ccircle cx='17' cy='24' r='2.6' fill='%231f2433'/%3E%3Ccircle cx='31' cy='24' r='2.6' fill='%231f2433'/%3E%3Cpath d='M24 28l-3 6h6z' fill='%23f0a43a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fbf7f0; --cream-2:#f3ecdf; --card:#ffffff; --ink:#1f2433; --ink-2:#575c70; --line:#e4dccb;
+  --brand:#4338ca; --brand-dark:#312e81; --brand-soft:#e6e4fa; --sun:#f0a43a; --sun-soft:#fdebcc;
+  --ok:#17744f; --ok-soft:#d8f0e4; --bad:#a43d12; --bad-soft:#fbe3d4;
+  --head:"Nunito","Trebuchet MS",system-ui,sans-serif; --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:400 1.0625rem/1.65 var(--body);-webkit-font-smoothing:antialiased}
+svg{display:block}
+a{color:inherit}
+.wrap{width:min(1080px,100% - 40px);margin-inline:auto}
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;z-index:50}
+.skip:focus{left:12px}
+h1,h2,h3{font-family:var(--head);font-weight:800;line-height:1.12;margin:0;letter-spacing:-.01em}
+p{margin:0}
+
+/* topo */
+.top{background:var(--cream);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 1.45rem/1 var(--head)}
+.logo svg{width:34px;height:34px}
+.logo b{color:var(--brand)}
+.links{display:flex;align-items:center;gap:24px}
+.links a{text-decoration:none;font-weight:600;font-size:.97rem;color:var(--ink-2);padding:10px 0}
+.links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border-radius:12px;border:2px solid var(--brand);background:var(--brand);color:#fff;font:700 1rem/1 var(--body);text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s,transform .15s}
+.btn:hover{background:var(--brand-dark);border-color:var(--brand-dark);transform:translateY(-1px)}
+.btn.line{background:transparent;color:var(--brand)}
+.btn.line:hover{background:var(--brand-soft);border-color:var(--brand)}
+.links .btn{min-height:44px;padding:0 20px;color:#fff;font-size:.95rem}
+.links .btn:hover{color:#fff}
+@media(max-width:720px){.links a:not(.btn){display:none}}
+@media(max-width:400px){.logo{font-size:1.25rem}.logo svg{width:30px;height:30px}.links .btn{padding:0 14px;font-size:.88rem}}
+
+/* hero */
+.hero{padding:clamp(40px,7vw,88px) 0 clamp(56px,8vw,104px)}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,6vw,80px);align-items:center}
+h1{font-size:clamp(2.4rem,6vw,4.1rem)}
+h1 mark{background:linear-gradient(transparent 62%,var(--sun) 62% 92%,transparent 92%);color:inherit;padding:0 .05em}
+.hero p.lead{font-size:clamp(1.1rem,2vw,1.3rem);color:var(--ink-2);margin:24px 0 32px;max-width:36ch}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.status{margin-top:28px;font-size:.95rem;color:var(--ink-2);max-width:44ch;padding-left:14px;border-left:3px solid var(--sun)}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* bilhete x app */
+.scene{position:relative;padding:8px 0 24px}
+.note{width:min(300px,86%);background:#fff7c9;padding:20px 20px 24px;transform:rotate(-3.5deg);box-shadow:0 10px 22px -10px rgba(31,36,51,.35);font:italic 1.05rem/1.4 "Comic Sans MS","Segoe Print","Bradley Hand",cursive;color:#4a4528;position:relative}
+.note::before{content:"";position:absolute;top:-12px;left:50%;width:84px;height:26px;margin-left:-42px;background:rgba(240,164,58,.55);transform:rotate(2deg)}
+.note s{opacity:.55}
+.phoneish{margin:-8px 0 0 auto;width:min(340px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 18px 36px -18px rgba(31,36,51,.45);position:relative}
+.phoneish h3{font-size:.98rem;color:var(--ink-2);font-weight:700;margin-bottom:12px}
+.item{padding:11px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0;padding-top:0}
+.item strong{display:block;font-size:1rem}
+.item span{font-size:.85rem;color:var(--ink-2)}
+.cat{display:inline-block;font:700 .72rem/1 var(--body);padding:4px 8px;border-radius:6px;margin-bottom:6px}
+.c-aviso{background:var(--sun-soft);color:#8a4b00}
+.c-manut{background:#dbe8fb;color:#1c4f9c}
+.c-reuniao{background:var(--brand-soft);color:var(--brand-dark)}
+.c-evento{background:#f0e0f6;color:#722d93}
+.caption{font-size:.82rem;color:var(--ink-2);margin-top:12px}
+
+/* blocos de história */
+.story{padding:clamp(56px,8vw,96px) 0}
+.story.tint{background:var(--cream-2)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,80px);align-items:center}
+.cols>*{min-width:0}
+.cols.flip .text{order:2}
+@media(max-width:860px){.cols,.cols.flip{grid-template-columns:1fr}.cols.flip .text{order:0}}
+.when{font:700 .98rem/1.3 var(--body);color:var(--brand);margin-bottom:12px}
+h2{font-size:clamp(1.75rem,3.8vw,2.55rem)}
+.text p{margin-top:18px;color:var(--ink-2);max-width:46ch}
+.text p strong{color:var(--ink)}
+.before-after{margin-top:22px;display:grid;gap:10px}
+.before-after div{padding:12px 16px;border-radius:10px;font-size:.98rem}
+.before-after .b{background:var(--bad-soft);color:#6d2a0a}
+.before-after .a{background:var(--ok-soft);color:#0e4a31}
+.before-after b{display:block;font-size:.8rem;letter-spacing:.02em;margin-bottom:2px}
+
+/* demos */
+.demo{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 14px 30px -20px rgba(31,36,51,.4)}
+.demo h3{font-size:1.05rem;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{min-height:44px;padding:0 16px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);font:700 .92rem/1 var(--body);cursor:pointer}
+.chip:hover{border-color:var(--brand)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.feed .item[hidden]{display:none}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:10px}
+.slot{min-height:60px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);font:700 1rem/1.25 var(--body);cursor:pointer;padding:8px}
+.slot small{display:block;font:600 .76rem/1.3 var(--body);color:var(--ink-2)}
+.slot:hover:not([aria-disabled="true"]){border-color:var(--brand)}
+.slot[aria-disabled="true"]{background:repeating-linear-gradient(135deg,#f6f1e6 0 8px,#ece4d3 8px 16px);cursor:not-allowed;color:var(--ink-2)}
+.slot[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.slot[aria-pressed="true"] small{color:var(--ok)}
+.msg{margin-top:16px;min-height:3.4em;padding:12px 14px;border-radius:10px;background:var(--cream);font-size:.95rem}
+.msg.err{background:var(--bad-soft);color:#6d2a0a}
+.msg.ok{background:var(--ok-soft);color:#0e4a31}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* celular */
+.points{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:16px}
+.points li{padding-left:18px;border-left:3px solid var(--sun);color:var(--ink-2);max-width:52ch}
+.points li strong{color:var(--ink);display:block}
+
+/* fase 2 */
+.next{margin-top:34px;display:grid;gap:0;border-top:2px solid var(--ink)}
+.next article{display:grid;grid-template-columns:minmax(180px,.5fr) 1fr;gap:28px;padding:26px 0;border-bottom:1px solid var(--line)}
+.next h3{font-size:1.35rem}
+.next h3 small{display:block;margin-top:6px;font:700 .82rem/1.3 var(--body);color:var(--brand)}
+.next p{color:var(--ink-2);max-width:56ch}
+@media(max-width:700px){.next article{grid-template-columns:1fr;gap:10px}}
+
+/* fim */
+.end{padding:clamp(56px,8vw,96px) 0}
+.endbox{background:var(--brand-dark);color:#fff;border-radius:22px;padding:clamp(32px,6vw,64px);display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center}
+.endbox h2{color:#fff}
+.endbox p{margin-top:16px;color:#d6d4f5;max-width:44ch}
+.endbox .btn{background:var(--sun);border-color:var(--sun);color:#2a1d00}
+.endbox .btn:hover{background:#ffc15e;border-color:#ffc15e}
+.endbox .side{display:flex;justify-content:flex-end}
+@media(max-width:800px){.endbox{grid-template-columns:1fr}.endbox .side{justify-content:flex-start}}
+footer{padding:0 0 48px;color:var(--ink-2);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.shake{animation:none}.btn{transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="#" aria-label="CondoOwl, início">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 8l9 6q7-3 14 0l9-6v20q0 14-16 16Q8 42 8 28z" fill="#4338ca"/><circle cx="17" cy="24" r="6" fill="#fff"/><circle cx="31" cy="24" r="6" fill="#fff"/><circle cx="17" cy="24" r="2.6" fill="#1f2433"/><circle cx="31" cy="24" r="2.6" fill="#1f2433"/><path d="M24 28l-3 6h6z" fill="#f0a43a"/></svg>
+      <span>Condo<b>Owl</b></span>
+    </a>
+    <nav class="links" aria-label="Principal">
+      <a href="#avisos">Avisos</a>
+      <a href="#reservas">Reservas</a>
+      <a href="#proxima-fase">Próxima fase</a>
+      <a class="btn" href="#contato">Marcar conversa</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Chega de recado colado <mark>no elevador</mark>.</h1>
+        <p class="lead">O CondoOwl junta os avisos e as reservas do condomínio num app só. O síndico para de apagar incêndio e o morador sabe o que está acontecendo.</p>
+        <div class="cta">
+          <a class="btn" href="#contato">Quero ver no meu condomínio</a>
+          <a class="btn line" href="#avisos">Como funciona</a>
+        </div>
+        <p class="status"><strong>O que já funciona:</strong> mural de comunicados e reservas de espaços. <strong>O que vem depois:</strong> cobrança por Pix/boleto e prestadores de confiança.</p>
+      </div>
+
+      <div class="scene" aria-label="Comparação entre um bilhete de papel e o mural do aplicativo">
+        <div class="note">
+          Elevador em manutenção terça. <s>Avisem os vizinhos!</s><br>— Síndico
+        </div>
+        <div class="phoneish">
+          <h3>Mural do condomínio</h3>
+          <div class="item"><span class="cat c-manut">Manutenção</span><strong>Elevador social parado na terça</strong><span>Exemplo ilustrativo</span></div>
+          <div class="item"><span class="cat c-reuniao">Reunião</span><strong>Assembleia: pauta e horário</strong><span>Exemplo ilustrativo</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story tint" id="avisos">
+    <div class="wrap cols">
+      <div class="text">
+        <p class="when">Quinta-feira, 7h. A água será cortada.</p>
+        <h2>O aviso chega em quem precisa, não só em quem passou pela portaria.</h2>
+        <p>Hoje o recado vira bilhete na portaria, mensagem solta no grupo de WhatsApp, e metade dos moradores descobre quando abre a torneira.</p>
+        <p>No CondoOwl, o síndico publica no <strong>mural</strong> e escolhe a categoria: <strong>Avisos, Manutenções, Reuniões ou Eventos Sociais</strong>. O morador filtra pelo que importa pra ele, e o comunicado oficial fica num lugar só.</p>
+      </div>
+      <div class="demo">
+        <h3>Teste o mural</h3>
+        <div class="chips" role="group" aria-label="Filtrar por categoria">
+          <button class="chip" type="button" data-f="todos" aria-pressed="true">Todos</button>
+          <button class="chip" type="button" data-f="aviso" aria-pressed="false">Avisos</button>
+          <button class="chip" type="button" data-f="manut" aria-pressed="false">Manutenções</button>
+          <button class="chip" type="button" data-f="reuniao" aria-pressed="false">Reuniões</button>
+          <button class="chip" type="button" data-f="evento" aria-pressed="false">Eventos Sociais</button>
+        </div>
+        <div class="feed" id="feed" aria-live="polite">
+          <div class="item" data-c="aviso"><span class="cat c-aviso">Aviso</span><strong>Água cortada na quinta, das 8h às 12h</strong></div>
+          <div class="item" data-c="manut"><span class="cat c-manut">Manutenção</span><strong>Revisão do portão da garagem</strong></div>
+          <div class="item" data-c="reuniao"><span class="cat c-reuniao">Reunião</span><strong>Assembleia de moradores</strong></div>
+          <div class="item" data-c="evento"><span class="cat c-evento">Evento Social</span><strong>Festa junina do condomínio</strong></div>
+        </div>
+        <p class="caption">Comunicados de exemplo, só para demonstrar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="reservas">
+    <div class="wrap cols flip">
+      <div class="text">
+        <p class="when">Sábado. Duas famílias querem a churrasqueira.</p>
+        <h2>O sistema diz “não” antes de virar discussão.</h2>
+        <p>Quem já cuidou de um salão de festas conhece a cena: caderno na portaria, dois nomes no mesmo horário, e o síndico no meio.</p>
+        <p>No CondoOwl o morador pede o espaço em poucos toques e o sistema <strong>confere os horários sozinho</strong>. Se já tem alguém naquele horário, a segunda reserva simplesmente não é aceita.</p>
+        <div class="before-after">
+          <div class="b"><b>Antes</b>Caderno, conferência na mão, conflito descoberto na hora da festa.</div>
+          <div class="a"><b>Com o CondoOwl</b>Horário ocupado fica bloqueado. Não precisa o síndico arbitrar.</div>
+        </div>
+      </div>
+      <div class="demo">
+        <h3>Churrasqueira, sábado: tente reservar</h3>
+        <div class="slots" id="slots" role="group" aria-label="Horários de sábado">
+          <button class="slot" type="button" data-s="08h às 12h">08h–12h<small>Livre</small></button>
+          <button class="slot" type="button" data-s="12h às 16h">12h–16h<small>Livre</small></button>
+          <button class="slot" type="button" data-s="16h às 20h" aria-disabled="true">16h–20h<small>Já reservado</small></button>
+          <button class="slot" type="button" data-s="20h às 00h">20h–00h<small>Livre</small></button>
+        </div>
+        <p class="msg" id="msg" role="status">Escolha um horário. Vale tentar o que está reservado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="story tint">
+    <div class="wrap cols">
+      <div class="text">
+        <p class="when">No bolso, não no computador.</p>
+        <h2>Feito pro celular de quem mora, não pro de quem programa.</h2>
+        <p>Morador resolve as coisas no meio do dia, de pé, com uma mão. Por isso o app foi desenhado primeiro pro celular.</p>
+      </div>
+      <ul class="points">
+        <li><strong>Letra legível, tela limpa</strong>Tipografia pensada para leitura rápida, sem poluição.</li>
+        <li><strong>Janelas com fundo desfocado</strong>Ao abrir uma reserva ou um aviso, o resto da tela fica em segundo plano e você não se perde.</li>
+        <li><strong>Cada um vê o seu</strong>Síndico e morador têm perfis separados, cada um com o que precisa fazer.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="story" id="proxima-fase">
+    <div class="wrap">
+      <div class="text">
+        <p class="when">O que ainda não está no ar</p>
+        <h2>A próxima fase mexe no que mais dá trabalho.</h2>
+      </div>
+      <div class="next">
+        <article>
+          <h3>Financeiro automático<small>Em desenvolvimento</small></h3>
+          <p>Hoje alguém confere comprovante um por um. A proposta: o app gera a cobrança, o morador paga por <strong>Pix ou boleto</strong> e o sistema dá baixa sozinho, marcando a conta como “Paga”, via integração com gateway de pagamento. Menos horas do síndico na planilha.</p>
+        </article>
+        <article>
+          <h3>Prestadores filiados<small>Em desenvolvimento</small></h3>
+          <p>Aquele eletricista que alguém indicou no grupo e ninguém sabe se é bom. A ideia é um diretório de profissionais (eletricistas, encanadores e outros) <strong>homologados pelo condomínio</strong>, com ligação e WhatsApp direto do app.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="end" id="contato">
+    <div class="wrap">
+      <div class="endbox">
+        <div>
+          <h2>Quer ver rodando no seu condomínio?</h2>
+          <p>Marque uma conversa e a gente mostra o app funcionando. A estrutura foi feita para crescer junto com as necessidades dos seus moradores.</p>
+        </div>
+        <div class="side">
+          <!-- TODO: trocar pelo contato real (WhatsApp/e-mail) antes de publicar de verdade -->
+          <a class="btn" href="mailto:?subject=Quero%20conhecer%20o%20CondoOwl">Marcar uma conversa</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© CondoOwl</span><span>Gestão inteligente. Condomínio em harmonia.</span></div>
+</footer>
+
+<script>
+(function(){
+  var chips=document.querySelectorAll('.chip'),items=document.querySelectorAll('#feed .item');
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false')});
+    var f=c.dataset.f;
+    items.forEach(function(p){p.hidden=!(f==='todos'||p.dataset.c===f)});
+  })});
+
+  var slots=document.querySelectorAll('.slot'),msg=document.getElementById('msg'),sel=null;
+  function say(t,k){msg.textContent=t;msg.className='msg '+(k||'')}
+  slots.forEach(function(b){b.addEventListener('click',function(){
+    if(b.getAttribute('aria-disabled')==='true'){
+      say('Das '+b.dataset.s+' já tem reserva. O sistema não aceita dois pedidos no mesmo horário.','err');
+      b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return;
+    }
+    if(sel&&sel!==b){sel.setAttribute('aria-pressed','false');sel.querySelector('small').textContent='Livre'}
+    var on=b.getAttribute('aria-pressed')!=='true';
+    b.setAttribute('aria-pressed',on?'true':'false');
+    b.querySelector('small').textContent=on?'Sua reserva':'Livre';
+    sel=on?b:null;
+    say(on?'Pronto: churrasqueira reservada das '+b.dataset.s+'.':'Reserva cancelada, o horário voltou a ficar livre.',on?'ok':'');
+  })});
+})();
+</script>
+</body>
+</html>
