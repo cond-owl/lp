@@ -9,7 +9,7 @@ const CONTATO = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Quer
 
 export function BotaoDownloadPWA() {
   // 👇 Coloque aqui o link real onde o PWA (sistema) vai ficar hospedado 👇
-  const LINK_DO_APP = "https://app.condoowl.com";
+  const LINK_DO_APP = "https://cond-owl.netlify.app/";
 
   return (
     <a
